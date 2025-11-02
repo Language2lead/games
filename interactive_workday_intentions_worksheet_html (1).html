@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Workday Intentions Worksheet</title>
+  <style>
+    :root{
+      --bg:#0b1220;
+      --card:#111a2b;
+      --muted:#8aa0b8;
+      --text:#e8eef6;
+      --accent:#6ea8fe;
+      --accent-2:#7af0c2;
+      --danger:#ff7575;
+      --ring: 0 0 0 3px rgba(110,168,254,.35);
+      --radius:18px;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0; font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial,Apple Color Emoji,Segoe UI Emoji;
+      background: radial-gradient(1200px 800px at 20% -10%, #12233e 0%, #0b1220 50%), var(--bg);
+      color:var(--text);
+      line-height:1.4;
+      padding:24px;
+    }
+    .container{max-width:1100px;margin:0 auto}
+    .card{
+      background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:var(--radius);
+      box-shadow: 0 8px 30px rgba(0,0,0,.25);
+      overflow:hidden;
+    }
+    header{
+      padding:24px 24px 12px 24px;
+      display:flex; align-items:center; justify-content:space-between; gap:16px;
+    }
+    h1{font-size: clamp(20px, 2.6vw, 32px); margin:0}
+    .sub{color:var(--muted); font-size:14px}
+
+    .controls{display:flex; gap:10px; flex-wrap:wrap}
+    button{
+      appearance:none; border:none; cursor:pointer; color:#09111f;
+      padding:10px 14px; border-radius:12px; font-weight:600; background:var(--accent);
+      transition: transform .05s ease, box-shadow .2s ease, background .2s ease;
+      box-shadow: 0 6px 18px rgba(110,168,254,.35);
+    }
+    button.secondary{ background:#1a2844; color:var(--text); box-shadow:none; border:1px solid rgba(255,255,255,.12) }
+    button.ghost{ background:transparent; color:var(--muted); box-shadow:none; border:1px solid rgba(255,255,255,.08) }
+    button:active{ transform: translateY(1px) }
+    button:focus-visible{ outline:none; box-shadow: var(--ring) }
+    .kpi{display:flex; gap:16px; align-items:center; flex-wrap:wrap}
+    .kpi .pill{padding:6px 10px; border-radius:999px; background:#0f1a2d; border:1px solid rgba(255,255,255,.08); color:var(--muted); font-size:12px}
+
+    table{ width:100%; border-collapse:separate; border-spacing:0 8px }
+    thead th{ font-size:12px; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:.04em; padding:12px 10px }
+    tbody td{ background:rgba(255,255,255,.02); border-top:1px solid rgba(255,255,255,.08); border-bottom:1px solid rgba(255,255,255,.08); }
+    tbody td:first-child{ border-left:1px solid rgba(255,255,255,.08); border-top-left-radius:12px; border-bottom-left-radius:12px }
+    tbody td:last-child{ border-right:1px solid rgba(255,255,255,.08); border-top-right-radius:12px; border-bottom-right-radius:12px }
+
+    .task{ padding:14px 16px; font-weight:600 }
+    .center{ text-align:center; padding:6px 8px }
+    .legend{ display:flex; gap:12px; flex-wrap:wrap; color:var(--muted); font-size:12px }
+
+    .foot{ display:flex; justify-content:space-between; align-items:center; gap:16px; padding:14px 18px; border-top:1px solid rgba(255,255,255,.08); background:linear-gradient(180deg, rgba(0,0,0,.05), transparent) }
+    .note{ width:100%; background:#0f1a2d; color:var(--text); border:1px solid rgba(255,255,255,.12); border-radius:10px; padding:10px; min-height:48px; resize:vertical }
+
+    /* Custom radios */
+    .radio{
+      appearance:none; width:22px; height:22px; border:2px solid #2d446d; border-radius:6px; display:inline-grid; place-content:center; background:#0f1a2d; cursor:pointer; transition:border-color .15s ease, box-shadow .2s ease, transform .06s ease;
+    }
+    .radio:focus-visible{ outline:none; box-shadow: var(--ring) }
+    .radio:active{ transform:scale(.96) }
+    .radio::before{ content:""; width:14px; height:14px; border-radius:4px; transform:scale(0); transition:transform .12s ease; background:linear-gradient(135deg, var(--accent-2), var(--accent)); }
+    .radio:checked::before{ transform:scale(1) }
+
+    .sr-only{ position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0 }
+
+    .progress{ height:10px; background:#13213a; border-radius:999px; overflow:hidden; border:1px solid rgba(255,255,255,.1) }
+    .progress > div{ height:100%; width:0%; background:linear-gradient(90deg, var(--accent), var(--accent-2)); transition: width .25s ease }
+
+    @media (max-width: 780px){
+      thead th:nth-child(n+3){ display:none }
+      tbody td:nth-child(n+3){ display:none }
+      .task{ font-size:14px }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="card" role="region" aria-label="Workday Intentions Worksheet">
+      <header>
+        <div>
+          <h1>Workday Intentions Worksheet</h1>
+          <div class="sub" id="dateSub">Think about your day <strong>tomorrow</strong> at work and put a check mark in the space that corresponds to your level.</div>
+          <div class="legend" aria-hidden="true" style="margin-top:8px">
+            <span>Plans/Intention <strong>85–99%</strong></span>
+            <span>• Probable Actions <strong>70–80%</strong></span>
+            <span>• Possible Actions <strong>50–65%</strong></span>
+            <span>• Unlikely <strong>0–20%</strong></span>
+            <span>• Stretch</span>
+          </div>
+        </div>
+        <div class="controls">
+          <button id="saveBtn" title="Save progress to this browser">Save</button>
+          <button class="secondary" id="loadBtn" title="Load the last saved progress">Load</button>
+          <button class="ghost" id="clearBtn" title="Clear all selections">Clear</button>
+          <button class="secondary" id="printBtn" title="Print or export to PDF">Print / PDF</button>
+        </div>
+      </header>
+
+      <div style="padding:0 18px 12px">
+        <div class="kpi">
+          <div class="pill">Selected: <strong id="selCount">0</strong> / <span id="rowCount">0</span></div>
+          <div class="pill">Completion</div>
+          <div class="progress" style="flex:1; min-width:160px"><div id="progFill"></div></div>
+        </div>
+      </div>
+
+      <div style="padding: 0 12px 18px">
+        <table role="table" aria-describedby="dateSub">
+          <thead>
+            <tr>
+              <th scope="col">Activity</th>
+              <th scope="col" class="center">Plans / Intention<br><small>85–99%</small></th>
+              <th scope="col" class="center">Probable Actions<br><small>70–80%</small></th>
+              <th scope="col" class="center">Possible Actions<br><small>50–65%</small></th>
+              <th scope="col" class="center">Unlikely<br><small>0–20%</small></th>
+              <th scope="col" class="center">Stretch</th>
+            </tr>
+          </thead>
+          <tbody id="tbody">
+            <!-- rows injected by JS for easier maintenance -->
+          </tbody>
+        </table>
+      </div>
+
+      <div class="foot">
+        <textarea class="note" id="notes" placeholder="Notes (optional): What might move a ‘Possible’ to a ‘Probable’? Any blockers or dependencies?"></textarea>
+      </div>
+    </div>
+  </div>
+
+  <template id="rowTemplate">
+    <tr>
+      <td class="task"></td>
+      <td class="center"></td>
+      <td class="center"></td>
+      <td class="center"></td>
+      <td class="center"></td>
+      <td class="center"></td>
+    </tr>
+  </template>
+
+  <script>
+    const ACTIVITIES = [
+      "receive a phone call",
+      "go to a meeting",
+      "call my family",
+      "prepare my lunch or dinner",
+      "use the computer",
+      "go to a movie",
+      "watch videos",
+      "send an email"
+    ];
+
+    const COLUMNS = [
+      { key: 'plans', label: 'Plans / Intention 85–99%' },
+      { key: 'probable', label: 'Probable Actions 70–80%' },
+      { key: 'possible', label: 'Possible Actions 50–65%' },
+      { key: 'unlikely', label: 'Unlikely 0–20%' },
+      { key: 'stretch', label: 'Stretch' },
+    ];
+
+    const tbody = document.getElementById('tbody');
+    const rowTmpl = document.getElementById('rowTemplate');
+
+    function makeRadio(name, value, label){
+      const id = `${name}-${value}`;
+      const input = document.createElement('input');
+      input.type = 'radio';
+      input.className = 'radio';
+      input.name = name;
+      input.id = id;
+      input.value = value;
+      input.setAttribute('aria-label', label);
+      input.addEventListener('change', updateStats);
+      return input;
+    }
+
+    function buildTable(){
+      ACTIVITIES.forEach((task, idx) => {
+        const tr = rowTmpl.content.firstElementChild.cloneNode(true);
+        const taskCell = tr.children[0];
+        taskCell.textContent = task;
+        taskCell.id = `task-${idx}`;
+
+        COLUMNS.forEach((col, cIdx) => {
+          const cell = tr.children[cIdx+1];
+          const radio = makeRadio(`row${idx}`, col.key, `${task}: ${col.label}`);
+          const lbl = document.createElement('label');
+          lbl.setAttribute('for', radio.id);
+          lbl.className = 'sr-only';
+          lbl.textContent = `${task}: ${col.label}`;
+          cell.appendChild(radio);
+          cell.appendChild(lbl);
+        });
+        tbody.appendChild(tr);
+      });
+      document.getElementById('rowCount').textContent = ACTIVITIES.length;
+    }
+
+    function updateStats(){
+      const total = ACTIVITIES.length;
+      const picked = COLUMNS.reduce((sum, col) => sum + document.querySelectorAll(`input[value="${col.key}"]:checked`).length, 0);
+      document.getElementById('selCount').textContent = picked;
+      document.getElementById('progFill').style.width = `${Math.round((picked/total)*100)}%`;
+      saveDraft(true); // autosave silently
+    }
+
+    function saveDraft(silent=false){
+      const data = {
+        date: new Date().toISOString(),
+        selections: ACTIVITIES.map((task, idx) => {
+          const checked = document.querySelector(`input[name=row${idx}]:checked`);
+          return { task, choice: checked ? checked.value : null };
+        }),
+        notes: document.getElementById('notes').value
+      };
+      localStorage.setItem('workday-intentions', JSON.stringify(data));
+      if(!silent) toast('Saved!');
+    }
+
+    function loadDraft(){
+      const raw = localStorage.getItem('workday-intentions');
+      if(!raw){ toast('No saved data yet.'); return; }
+      try{
+        const data = JSON.parse(raw);
+        data.selections?.forEach((row, idx) => {
+          if(row?.choice){
+            const inp = document.querySelector(`input[name=row${idx}][value="${row.choice}"]`);
+            if(inp) inp.checked = true;
+          }
+        });
+        document.getElementById('notes').value = data.notes || '';
+        updateStats();
+        toast('Loaded.');
+      }catch(e){ toast('Could not load saved data.'); }
+    }
+
+    function clearAll(){
+      document.querySelectorAll('input[type=radio]').forEach(i => i.checked = false);
+      document.getElementById('notes').value='';
+      updateStats();
+      toast('Cleared.');
+    }
+
+    function printDoc(){
+      window.print();
+    }
+
+    function setTomorrow(){
+      const now = new Date();
+      const tomorrow = new Date(now);
+      tomorrow.setDate(now.getDate()+1);
+      const ds = tomorrow.toLocaleDateString(undefined, { weekday:'long', year:'numeric', month:'long', day:'numeric' });
+      document.getElementById('dateSub').innerHTML = `Think about your day <strong>${ds}</strong> at work and put a check mark in the space that corresponds to your level.`;
+    }
+
+    // tiny toast
+    const toast = (() => {
+      let el;
+      return (msg) => {
+        if(!el){
+          el = document.createElement('div');
+          el.style.position='fixed'; el.style.bottom='20px'; el.style.left='50%'; el.style.transform='translateX(-50%)';
+          el.style.background='rgba(12,20,36,.95)'; el.style.border='1px solid rgba(255,255,255,.1)'; el.style.padding='10px 14px'; el.style.borderRadius='10px'; el.style.color='var(--text)'; el.style.fontWeight='600'; el.style.boxShadow='0 10px 30px rgba(0,0,0,.3)'; el.style.zIndex='9999';
+          document.body.appendChild(el);
+        }
+        el.textContent = msg; el.style.opacity='1';
+        setTimeout(()=>{ el.style.transition='opacity .6s ease'; el.style.opacity='0'; }, 1200);
+      }
+    })();
+
+    // Wire up
+    buildTable();
+    setTomorrow();
+    updateStats();
+
+    document.getElementById('saveBtn').addEventListener('click', ()=>saveDraft());
+    document.getElementById('loadBtn').addEventListener('click', loadDraft);
+    document.getElementById('clearBtn').addEventListener('click', clearAll);
+    document.getElementById('printBtn').addEventListener('click', printDoc);
+
+  </script>
+</body>
+</html>
